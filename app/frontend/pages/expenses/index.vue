@@ -12,6 +12,20 @@
   </div>
 </template>
 
-<script setup>
-defineProps(["expenses"]);
+<script lang="ts">
+  import { defineComponent, PropType } from 'vue';
+  import { IExpenses } from '../../interfaces';
+
+  export default defineComponent({
+    name: 'Expenses',
+    props: {
+      expenses: {
+        type: [] as PropType<IExpenses[]>,
+        required: true
+      },
+    },
+    setup() {
+      return {}
+    }
+  })
 </script>

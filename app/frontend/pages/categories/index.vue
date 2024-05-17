@@ -4,6 +4,20 @@
   </div>
 </template>
 
-<script setup>
-defineProps(["categories"]);
+<script lang="ts">
+  import { defineComponent, PropType } from 'vue';
+  import { ICategory } from '../../interfaces';
+
+  export default defineComponent({
+    name: 'Categories',
+    props: {
+      categories: {
+        type: [] as PropType<ICategory[]>,
+        required: true
+      },
+    },
+    setup() {
+      return {}
+    }
+  })
 </script>

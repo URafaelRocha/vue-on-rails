@@ -2,9 +2,19 @@
   <v-app id="main">
     <v-navigation-drawer v-model="drawer">
       <v-list>
-        <iLink v-for="resource in resources" :key="resource.name" :href="resource.uri" role="navigation"
-          class="inertia-link">
-          <v-list-item :value="resource.name" color="primary" link>
+        <iLink
+          v-for="resource in data.resources"
+          :key="resource.name"
+          :href="resource.uri"
+          role="navigation"
+          class="inertia-link"
+        >
+          <v-list-item
+            :value="resource.name"
+            :color="resource.isSelected ? 'primary' : ''"
+            link
+            @click="selectRoute(resource)"
+          >
             <template v-slot:prepend>
               <v-icon :icon="resource.icon" />
             </template>
@@ -28,19 +38,69 @@
   </v-app>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script lang="ts">
+  import { ref, reactive, onMounted, defineComponent } from 'vue';
+  import { URI } from '../enums/routes';
+  import { IResource } from '../interfaces';
 
-const drawer = ref(null)
-const resources = [
-  { name: "Expenses", uri: "/expenses", icon: "mdi-finance" },
-  { name: "Categories", uri: "/categories", icon: "mdi-rhombus-split" },
-]
+  export default defineComponent({
+    name: 'Main',
+    setup() {
+      const drawer = ref(null);
+
+      const data: {
+        resources: IResource[];
+      } = reactive({
+        resources: [
+          {
+            name: 'Expenses',
+            uri: URI.EXPENSES,
+            icon: 'mdi-finance',
+            isSelected: false,
+          },
+          {
+            name: 'Categories',
+            uri: URI.CATEGORIES,
+            icon: 'mdi-rhombus-split',
+            isSelected: false,
+          },
+        ],
+      });
+
+      function selectRoute(resource: IResource) {
+        const currentResource = data.resources.find(
+          ({ name }) => name === resource.name
+        );
+
+        if (currentResource) {
+          currentResource.isSelected = true;
+
+          data.resources.forEach((res) => {
+            if (res !== currentResource) {
+              res.isSelected = false;
+            }
+          });
+        }
+      }
+
+      onMounted(() => {
+        const uris = [URI.EXPENSES, URI.CATEGORIES];
+        const currentPath = window.location.pathname;
+
+        if (uris.includes(currentPath as URI)) {
+          const resource = data.resources.find(({ uri }) => uri === currentPath);
+
+          if (resource) selectRoute(resource);
+        }
+      });
+
+      return {
+        drawer,
+        data,
+
+        // methods
+        selectRoute
+      };
+    },
+  });
 </script>
-
-<style lang="scss" scoped>
-.inertia-link {
-  color: #212121;
-  text-decoration-line: none;
-}
-</style>
