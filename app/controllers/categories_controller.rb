@@ -5,7 +5,7 @@ class CategoriesController < ApplicationController
   def index
     @categories = Category.all
 
-    render inertia: "categories", props: {
+    render inertia: "categories/index", props: {
       categories: @categories
     }
   end

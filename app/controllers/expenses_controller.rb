@@ -5,7 +5,7 @@ class ExpensesController < ApplicationController
   def index
     @expenses = Expense.all
 
-    render inertia: "expenses", props: {
+    render inertia: "expenses/index", props: {
       expenses: @expenses
     }
   end
