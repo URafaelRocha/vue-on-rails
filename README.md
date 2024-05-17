@@ -1,55 +1,55 @@
 # vue-on-rails
 
-## Descrição
+## Description
 
-Este é um projeto que combina Vue.js com Ruby on Rails para criar uma aplicação web poderosa e moderna.
+This is a project that combines Vue.js with Ruby on Rails to create a powerful and modern web application.
 
-## Como começar
+## Getting Started
 
-Para começar, siga estas etapas:
+To get started, follow these steps:
 
-1. Clone este repositório em sua máquina local:
+1. Clone this repository to your local machine:
 
 ```bash
 git clone git@github.com:URafaelRocha/vue-on-rails.git
 ```
 
-2. Navegue até o diretório do projeto:
+2. Navigate to the project directory:
 
 ```bash
 cd vue-on-rails
 ```
 
-3. Certifique-se de ter o Node.js instalado em sua máquina. Se preferir, você pode usar `nvm` para gerenciar suas versões do Node.js. Para este projeto, a versão `v18.20.2` é recomendada. Você pode usar o seguinte comando para mudar para essa versão:
+3. Ensure you have Node.js installed on your machine. If you prefer, you can use `nvm` to manage your Node.js versions. For this project, version `v18.20.2` is recommended. You can use the following command to switch to that version:
 
 ```bash
 nvm use v18.20.2
 ```
 
-4. Instale as dependências do Rails:
+4. Install Rails dependencies:
 
 ```bash
 bundle install
 ```
 
-5. Atualize as dependências do Vue.js usando Vite:
+5. Update Vue.js dependencies using Vite:
 
 ```bash
 bundle exec vite upgrade
 ```
 
-6. Agora você está pronto para iniciar o servidor Rails e começar a desenvolver:
+6. Now you're ready to start the Rails server and begin development:
 
 ```bash
 rails server
 ```
 
-Isso iniciará o servidor Rails na porta padrão (`http://localhost:3000`). Você pode acessar este URL em seu navegador para visualizar a aplicação.
+This will start the Rails server on the default port (`http://localhost:3000`). You can access this URL in your browser to view the application.
 
-## Contribuindo
+## Contributing
 
-Se você deseja contribuir para este projeto, fique à vontade para enviar pull requests. Ficaremos felizes em revisar suas contribuições!
+If you wish to contribute to this project, feel free to submit pull requests. We'll be happy to review your contributions!
 
-## Licença
+## License
 
-Este projeto está licenciado sob a Licença MIT. Consulte o arquivo [LICENSE](LICENSE) para obter detalhes.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
