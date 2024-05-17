@@ -38,7 +38,13 @@ bundle install
 bundle exec vite upgrade
 ```
 
-6. Now you're ready to start the Rails server and begin development:
+6. Create database, run migrations and seeds
+
+```bash
+rails db:create db:migrate db:seed
+```
+
+7. Now you're ready to start the Rails server and begin development:
 
 ```bash
 rails server
