@@ -12,6 +12,7 @@
           <v-list-item
             :value="resource.name"
             :color="resource.isSelected ? 'primary' : ''"
+            class="text-white"
             link
             @click="selectRoute(resource)"
           >

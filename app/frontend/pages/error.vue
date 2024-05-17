@@ -1,15 +1,11 @@
 <template>
-  <v-row align="center" justify="center" style="height: 100vh">
-    <v-col sm="12" md="4" class="text-black">
+  <v-row align="center" justify="center" class="h-screen">
+    <v-col sm="12" md="4">
       <div class="text-h1 mx-auto text-center">{{ title }}</div>
       <div class="text-h1 mx-auto text-center">{{ status }}</div>
       <div class="text-center py-8">{{ description }}</div>
       <div class="text-center">
-        <iLink :href="URI.EXPENSES" class="inertia-link" as="v-btn">
-          <v-btn variant="text" color="primary">
-            Home
-          </v-btn>
-        </iLink>
+        Ops, parece que ocorreu um erro
       </div>
     </v-col>
   </v-row>
