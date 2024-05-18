@@ -28,7 +28,7 @@
     <v-app-bar color="primary">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-app-bar-title>Application</v-app-bar-title>
+      <v-app-bar-title>Wallet Manager</v-app-bar-title>
 
       <v-btn
         :icon="theme.global.name.value === 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
@@ -47,78 +47,87 @@
 </template>
 
 <script lang="ts">
-  import { ref, reactive, onMounted, defineComponent } from 'vue';
-  import { URI } from '../enums/routes';
-  import { IResource } from '../interfaces';
+import { ref, reactive, onMounted, defineComponent, onBeforeMount, provide } from 'vue';
 
-  import { useTheme } from "vuetify";
+import { useTheme } from "vuetify";
 
-  export default defineComponent({
-    name: 'Main',
-    setup() {
-      const drawer = ref(null);
-      const theme = useTheme();
+import { categoriesService } from '../services/categories';
 
-      const data: {
-        resources: IResource[];
-      } = reactive({
-        resources: [
-          {
-            name: 'Expenses',
-            uri: URI.EXPENSES,
-            icon: 'mdi-finance',
-            isSelected: false,
-          },
-          {
-            name: 'Categories',
-            uri: URI.CATEGORIES,
-            icon: 'mdi-rhombus-split',
-            isSelected: false,
-          },
-        ],
-      });
+import { URI } from '../enums/routes';
+import { IResource } from '../interfaces';
 
-      function selectRoute(resource: IResource) {
-        const currentResource = data.resources.find(
-          ({ name }) => name === resource.name
-        );
+export default defineComponent({
+  name: 'Main',
+  setup() {
+    const categories = categoriesService;
 
-        if (currentResource) {
-          currentResource.isSelected = true;
+    const drawer = ref(null);
+    const theme = useTheme();
 
-          data.resources.forEach((res) => {
-            if (res !== currentResource) {
-              res.isSelected = false;
-            }
-          });
+    const data: {
+      resources: IResource[];
+    } = reactive({
+      resources: [
+        {
+          name: 'Categories',
+          uri: URI.CATEGORIES,
+          icon: 'mdi-rhombus-split',
+          isSelected: false,
+        },
+        {
+          name: 'Expenses',
+          uri: URI.EXPENSES,
+          icon: 'mdi-finance',
+          isSelected: false,
         }
+      ],
+    });
+
+    function selectRoute(resource: IResource) {
+      const currentResource = data.resources.find(
+        ({ name }) => name === resource.name
+      );
+
+      if (currentResource) {
+        currentResource.isSelected = true;
+
+        data.resources.forEach((res) => {
+          if (res !== currentResource) {
+            res.isSelected = false;
+          }
+        });
       }
+    }
 
-      function toggleTheme() {
-        theme.global.name.value =
-          theme.global.name.value === 'dark' ? 'light' : "dark";
+    function toggleTheme() {
+      theme.global.name.value =
+        theme.global.name.value === 'dark' ? 'light' : "dark";
+    }
+
+    onMounted(() => {
+      const uris = [URI.EXPENSES, URI.CATEGORIES];
+      const currentPath = window.location.pathname;
+
+      if (uris.includes(currentPath as URI)) {
+        const resource = data.resources.find(({ uri }) => uri === currentPath);
+
+        if (resource) selectRoute(resource);
       }
+    });
 
-      onMounted(() => {
-        const uris = [URI.EXPENSES, URI.CATEGORIES];
-        const currentPath = window.location.pathname;
+    onBeforeMount(() => {
+      provide('categories', categories);
+    });
 
-        if (uris.includes(currentPath as URI)) {
-          const resource = data.resources.find(({ uri }) => uri === currentPath);
+    return {
+      drawer,
+      data,
+      theme,
 
-          if (resource) selectRoute(resource);
-        }
-      });
-
-      return {
-        drawer,
-        data,
-        theme,
-
-        // methods
-        selectRoute,
-        toggleTheme
-      };
-    },
-  });
+      // methods
+      selectRoute,
+      toggleTheme
+    };
+  },
+});
 </script>

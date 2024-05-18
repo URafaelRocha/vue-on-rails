@@ -1,68 +1,132 @@
 <template>
-  <v-btn @click="create" icon="mdi-plus" />
+  <div
+    class="d-flex ga-3 flex-column w-100 align-end"
+  >
+    <v-btn
+      icon="mdi-plus"
+      class="mr-6"
+      @click="open"
+    />
 
-  <div v-for="category in categories" :key="category.id" class="pa-4">
-    <v-card :title="category.name" :color="category.color" class="mx-auto">
-      <template v-slot:append>
-        <v-btn icon="mdi-trash-can-outline" size="small" @click="destroy(category.id)"></v-btn>
+    <div
+      v-if="categoriesService.data.categories.length"
+      class="w-100"
+    >
+      <div
+        v-for="category in categoriesService.data.categories"
+        :key="category.id"
+        class="pa-4 w-100"
+      >
+        <v-card :title="category.name" :color="category.color" class="w-100">
+          <template v-slot:append>
+            <v-btn
+              icon="mdi-square-edit-outline"
+              size="small"
+              class="mr-2"
+              @click="open(category)"
+            ></v-btn>
+            <v-btn
+              icon="mdi-trash-can-outline"
+              size="small"
+              @click="categoriesService.destroy(category.id)"
+            ></v-btn>
+          </template>
+        </v-card>
+      </div>
+    </div>
+
+    <div v-else class="text-center pt-2 w-100">
+      No category found
+    </div>
+
+    <CategoryDialog
+      :show="categoriesService.data.dialog"
+      title="New Category"
+      @cancel="categoriesService.reset"
+      @confirm="confirm"
+    >
+      <template #content>
+        <v-card-text>
+          <v-alert
+            v-if="categoriesService.data.errorMessage"
+            type="error"
+            dismissible
+            class="mb-4"
+          >
+            {{ categoriesService.data.errorMessage }}
+          </v-alert>
+          <v-text-field
+            v-model="categoriesService.data.payload.name"
+            label="Name"
+            required
+          ></v-text-field>
+          <v-text-field
+            v-model="categoriesService.data.payload.color"
+            hint="example of color: #FF8C00"
+            label="Color"
+            required
+          ></v-text-field>
+        </v-card-text>
       </template>
-    </v-card>
+    </CategoryDialog>
   </div>
 </template>
 
 <script lang="ts">
-  import { defineComponent, PropType, ref } from 'vue';
-  import { ICategory } from '../../interfaces';
-  import { api } from '../../boot/axios';
+import { defineComponent, inject, PropType, onBeforeMount } from 'vue';
 
-  export default defineComponent({
-    name: 'Categories',
-    props: {
-      categories: {
-        type: Array as PropType<ICategory[]>,
-        required: true
-      },
+import Categories from '../../services/categories';
+import Dialog from '../../components/dialog.vue';
+
+import { ICategory } from '../../interfaces';
+
+export default defineComponent({
+  name: 'Categories',
+  components: {
+    CategoryDialog: Dialog,
+  },
+  props: {
+    categories: {
+      type: Array as PropType<ICategory[]>,
+      required: true,
     },
-    setup(props) {
-      const categories = ref<ICategory[]>(props.categories);
+  },
+  setup(props) {
+    const categoriesService = inject('categories') as Categories;
 
-      async function create() {
-        const payload = {
-          name: 'test category',
-          color: '#FF0000'
-        }
+    function open(category?: ICategory) {
+      // edit
+      if(category) {
+        categoriesService.data.payload.name = category.name;
+        categoriesService.data.payload.color = category.color;
 
-        try {
-          await api.post('/categories', payload);
-          await getCategories();
-        } catch (error) {
-          console.error('Error creating category:', error);
-        }
+        // if has this category id === isEditing
+        categoriesService.data.currentCategoryId = category.id;
       }
 
-      async function destroy(categoryId: number) {
-        try {
-          await api.delete(`/categories/${categoryId}`);
-          await getCategories();
-        } catch (error) {
-          console.error('Error deleting category:', error);
-        }
-      }
+      categoriesService.data.dialog = true;
+    }
 
-      async function getCategories() {
-        try {
-          const response: { data: ICategory[] } = await api.get('/categories/api');
-          categories.value = response.data;
-        } catch (error) {
-          console.error('Error for getting categories:', error);
-        }
-      }
-
-      return {
-        categories,
-        create,
-        destroy
+    async function confirm() {
+      if(categoriesService.data.currentCategoryId) {
+        await categoriesService.edit(categoriesService.data.currentCategoryId);
+      } else {
+        await categoriesService.create();
       }
     }
-  })
+
+    onBeforeMount(() => {
+      // set initial categories
+      categoriesService.data.categories = props.categories;
+    });
+
+    return {
+      categoriesService,
+
+      // methods
+      open,
+      confirm
+    };
+  },
+});
 </script>
