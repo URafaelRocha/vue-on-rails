@@ -64,11 +64,13 @@
           >
             {{ categoriesService.data.errorMessage }}
           </v-alert>
+
           <v-text-field
             v-model="categoriesService.data.payload.name"
             label="Name"
             required
           ></v-text-field>
+
           <v-text-field
             v-model="categoriesService.data.payload.color"
             hint="example of color: deep orange or #FF8C00"

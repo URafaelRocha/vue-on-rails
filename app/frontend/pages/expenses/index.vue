@@ -39,6 +39,15 @@
     >
       <template #content>
         <v-card-text>
+          <v-alert
+            v-if="data.errorMessage"
+            type="error"
+            dismissible
+            class="mb-4"
+          >
+            {{ data.errorMessage }}
+          </v-alert>
+
           <v-select
             v-model="data.payload.category_id"
             :items="data.categories"
@@ -91,7 +100,8 @@ export default defineComponent({
         name: string,
         amount: number,
         category_id: null | number
-      }
+      },
+      errorMessage: string
     } = reactive({
       expenses: [],
       categories: [],
@@ -100,7 +110,8 @@ export default defineComponent({
         name: '',
         amount: 0,
         category_id: null
-      }
+      },
+      errorMessage: ''
     });
 
     function toggleDialog() {

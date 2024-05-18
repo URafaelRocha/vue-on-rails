@@ -12,46 +12,46 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, computed } from 'vue';
-  import { URI } from '../enums/routes';
-  // import Layout from "../layouts/minimal.vue";
+import { defineComponent, computed } from 'vue';
+import { URI } from '../enums/routes';
+// import Layout from "../layouts/minimal.vue";
 
-  // defineOptions({ layout: Layout });
+// defineOptions({ layout: Layout });
 
-  export default defineComponent({
-    name: 'Error',
-    props: {
-      status: {
-        type: Number,
-        required: true
-      },
+export default defineComponent({
+  name: 'Error',
+  props: {
+    status: {
+      type: Number,
+      required: true
     },
-    setup(props) {
-      const title = computed(() => {
-        return {
-          200: "200",
-          403: "403",
-          404: "404",
-          500: "500",
-          503: "503",
-        }[props.status];
-      });
-
-      const description = computed(() => {
-        return {
-          200: "Successfully Request",
-          403: "Unauthorized",
-          404: "Not found",
-          500: "Serever Error",
-          503: "Maintenance",
-        }[props.status];
-      });
-
+  },
+  setup(props) {
+    const title = computed(() => {
       return {
-        title,
-        description,
-        URI
-      }
+        200: "200",
+        403: "403",
+        404: "404",
+        500: "500",
+        503: "503",
+      }[props.status];
+    });
+
+    const description = computed(() => {
+      return {
+        200: "Successfully Request",
+        403: "Unauthorized",
+        404: "Not found",
+        500: "Serever Error",
+        503: "Maintenance",
+      }[props.status];
+    });
+
+    return {
+      title,
+      description,
+      URI
     }
-  })
+  }
+});
 </script>
