@@ -25,6 +25,7 @@ end
 
 group :development do
   gem "js_from_routes"
+  gem "rubocop"
 end
 
 gem 'paranoia'
