@@ -7,13 +7,12 @@
           :key="resource.name"
           :href="resource.uri"
           role="navigation"
-          class="inertia-link"
+          class="inertia-link text-default"
         >
           <v-list-item
             :value="resource.name"
             :active="resource.isSelected"
-            color="primary"
-            class="text-white"
+            active-color="primary"
             link
             @click="selectRoute(resource)"
           >
@@ -30,10 +29,17 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-app-bar-title>Application</v-app-bar-title>
+
+      <v-btn
+        :icon="theme.global.name.value === 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+        density="compact"
+        size="large"
+        @click="toggleTheme"
+      />
     </v-app-bar>
 
     <v-main>
-      <v-container>
+      <v-container class="text-default">
         <slot />
       </v-container>
     </v-main>
@@ -45,10 +51,13 @@
   import { URI } from '../enums/routes';
   import { IResource } from '../interfaces';
 
+  import { useTheme } from "vuetify";
+
   export default defineComponent({
     name: 'Main',
     setup() {
       const drawer = ref(null);
+      const theme = useTheme();
 
       const data: {
         resources: IResource[];
@@ -85,6 +94,11 @@
         }
       }
 
+      function toggleTheme() {
+        theme.global.name.value =
+          theme.global.name.value === 'dark' ? 'light' : "dark";
+      }
+
       onMounted(() => {
         const uris = [URI.EXPENSES, URI.CATEGORIES];
         const currentPath = window.location.pathname;
@@ -99,9 +113,11 @@
       return {
         drawer,
         data,
+        theme,
 
         // methods
-        selectRoute
+        selectRoute,
+        toggleTheme
       };
     },
   });

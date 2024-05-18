@@ -5,6 +5,18 @@ import { createVuetify } from 'vuetify'
 export const vuetifyPlugin = createVuetify({
   ssr: true,
   theme: {
-    defaultTheme: 'dark'
+    defaultTheme: 'dark',
+    themes: {
+      dark: {
+        colors: {
+          default: '#FFFFFF'
+        }
+      },
+      light: {
+        colors: {
+          default: '#000000'
+        }
+      },
+    },
   }
 })
