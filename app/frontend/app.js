@@ -2,6 +2,7 @@ import { createApp, h } from "vue";
 import { createInertiaApp, Head, Link } from "@inertiajs/vue3";
 import { vuetifyPlugin } from "./vuetify";
 import { resolvePage } from "./pages";
+import { i18nInstance } from "./i18n";
 
 export default function () {
   createInertiaApp({
@@ -20,6 +21,7 @@ export default function () {
       const app = createApp({ render: () => h(App, props) });
       app.use(plugin);
       app.use(vuetifyPlugin);
+      app.use(i18nInstance);
 
       app.component("iHead", Head);
       app.component("iLink", Link);

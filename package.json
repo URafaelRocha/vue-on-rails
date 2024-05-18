@@ -12,6 +12,7 @@
     "@vitejs/plugin-vue": "^4.3.4",
     "vite-plugin-full-reload": "^1.0.5",
     "vite-plugin-vuetify": "^1.0.2",
+    "vue-i18n": "^9.2.2",
     "vuetify": "^3.3.17"
   }
 }

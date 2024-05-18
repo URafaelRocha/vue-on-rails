@@ -3,7 +3,7 @@
     class="d-flex ga-3 flex-column w-100"
   >
     <div class="d-flex align-center justify-space-between w-100">
-      <span class="text-h4 font-weight-medium ml-4">Categories</span>
+      <span class="text-h4 font-weight-medium ml-4">{{ $t('category.name') }}</span>
 
       <v-btn
         icon="mdi-plus"
