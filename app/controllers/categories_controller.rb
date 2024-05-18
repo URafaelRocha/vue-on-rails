@@ -3,21 +3,23 @@ class CategoriesController < ApplicationController
 
   # GET /categories
   def index
-    @categories = Category.all
+    @categories = Category.includes(:expenses).all.map do |category|
+      category.attributes.merge(expenses: category.expenses.as_json)
+    end
 
-    render inertia: "categories/index", props: {
-      categories: @categories
-    }
+    render inertia: "categories/index", props: { categories: @categories }
   end
 
   # GET /categories api
   def all
-    @categories = Category.all
+    @categories = Category.includes(:expenses).all.map do |category|
+      category.attributes.merge(expenses: category.expenses.as_json)
+    end
 
-    if @categories
+    if @categories.present?
       render json: @categories, status: :ok
     else
-      render json: @categories.errors, status: :unprocessable_entity
+      render json: { error: "No categories found" }, status: :not_found
     end
   end
 

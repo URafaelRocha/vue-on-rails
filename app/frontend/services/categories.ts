@@ -68,7 +68,6 @@ export default class Categories {
     }
   }
 
-
   public destroy = async (categoryId: number) => {
     try {
       await api.delete(`${URI.CATEGORIES}/${categoryId}`);
@@ -94,19 +93,22 @@ export default class Categories {
     name: string;
     color: string;
   }) => {
-    if (!payload.name && !payload.color) {
+    const trimmedName = payload.name.trim();
+    const trimmedColor = payload.color.trim();
+
+    if (!trimmedName && !trimmedColor) {
       return 'Please fill in the name and color.';
     }
 
-    if (!payload.name) {
+    if (!trimmedName) {
       return 'Please fill in the name.';
     }
 
-    if (!payload.color) {
+    if (!trimmedColor) {
       return 'Please fill in the color.';
     }
 
-    if (!isValidHexColor(payload.color)) {
+    if (trimmedColor.includes('#') && !isValidHexColor(trimmedColor)) {
       return 'Please enter a valid hexadecimal color.';
     }
 

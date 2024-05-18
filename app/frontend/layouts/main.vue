@@ -26,7 +26,7 @@
     </v-navigation-drawer>
 
     <v-app-bar color="primary">
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="changeDrawerView"></v-app-bar-nav-icon>
 
       <v-app-bar-title>Wallet Manager</v-app-bar-title>
 
@@ -61,7 +61,7 @@ export default defineComponent({
   setup() {
     const categories = categoriesService;
 
-    const drawer = ref(null);
+    const drawer = ref(true);
     const theme = useTheme();
 
     const data: {
@@ -97,11 +97,17 @@ export default defineComponent({
           }
         });
       }
+
+      // changeDrawerView();
     }
 
     function toggleTheme() {
       theme.global.name.value =
         theme.global.name.value === 'dark' ? 'light' : "dark";
+    }
+
+    function changeDrawerView() {
+      drawer.value = !drawer.value
     }
 
     onMounted(() => {
@@ -126,7 +132,8 @@ export default defineComponent({
 
       // methods
       selectRoute,
-      toggleTheme
+      toggleTheme,
+      changeDrawerView
     };
   },
 });

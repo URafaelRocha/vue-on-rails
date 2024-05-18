@@ -1,12 +1,17 @@
 <template>
   <div
-    class="d-flex ga-3 flex-column w-100 align-end"
+    class="d-flex ga-3 flex-column w-100"
   >
-    <v-btn
-      icon="mdi-plus"
-      class="mr-6"
-      @click="open"
-    />
+    <div class="d-flex align-center justify-space-between w-100">
+      <span class="text-h4 font-weight-medium ml-4">Categories</span>
+
+      <v-btn
+        icon="mdi-plus"
+        class="mr-7"
+        v-tooltip="'New Category'"
+        @click="open"
+      />
+    </div>
 
     <div
       v-if="categoriesService.data.categories.length"
@@ -18,6 +23,10 @@
         class="pa-4 w-100"
       >
         <v-card :title="category.name" :color="category.color" class="w-100">
+          <template v-slot:subtitle>
+            ${{ formatAmount(category.expenses) }}
+          </template>
+
           <template v-slot:append>
             <v-btn
               icon="mdi-square-edit-outline"
@@ -62,7 +71,8 @@
           ></v-text-field>
           <v-text-field
             v-model="categoriesService.data.payload.color"
-            hint="example of color: #FF8C00"
+            hint="example of color: deep orange or #FF8C00"
+            placeholder="Color name or Hex code"
             label="Color"
             required
           ></v-text-field>
@@ -79,6 +89,7 @@ import Categories from '../../services/categories';
 import Dialog from '../../components/dialog.vue';
 
 import { ICategory } from '../../interfaces';
+import { formatAmount } from '../../utils/validations';
 
 export default defineComponent({
   name: 'Categories',
@@ -125,7 +136,8 @@ export default defineComponent({
 
       // methods
       open,
-      confirm
+      confirm,
+      formatAmount
     };
   },
 });
