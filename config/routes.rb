@@ -10,6 +10,11 @@ Rails.application.routes.draw do
 
   defaults export: true do
     resources :expenses
-    resources :categories
+
+    resources :categories do
+      collection do
+        get '/api', to: 'categories#all'
+      end
+    end
   end
 end

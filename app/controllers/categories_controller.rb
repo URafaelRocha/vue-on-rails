@@ -1,5 +1,5 @@
 class CategoriesController < ApplicationController
-  before_action :set_category, only: %i[ show edit update destroy ]
+  before_action :set_category, only: %i[ update destroy ]
 
   # GET /categories
   def index
@@ -10,43 +10,44 @@ class CategoriesController < ApplicationController
     }
   end
 
-  # GET /categories/1
-  def show
-  end
+  # GET /categories api
+  def all
+    @categories = Category.all
 
-  # GET /categories/new
-  def new
-    @category = Category.new
-  end
-
-  # GET /categories/1/edit
-  def edit
+    if @categories
+      render json: @categories, status: :ok
+    else
+      render json: @categories.errors, status: :unprocessable_entity
+    end
   end
 
   # POST /categories
   def create
     @category = Category.new(category_params)
-
+  
     if @category.save
-      redirect_to @category, notice: "Category was successfully created."
+      render json: @category, notice: "Category was successfully created.", status: :created
     else
-      render :new, status: :unprocessable_entity
+      render json: @category.errors, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /categories/1
+  # PUT /categories/1
   def update
     if @category.update(category_params)
-      redirect_to @category, notice: "Category was successfully updated.", status: :see_other
+      render json: @category, notice: "Category was successfully updated.", status: :ok
     else
-      render :edit, status: :unprocessable_entity
+      render json: @category.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /categories/1
   def destroy
-    @category.destroy!
-    redirect_to categories_url, notice: "Category was successfully destroyed.", status: :see_other
+    if @category.destroy!
+      head :no_content
+    else
+      render json: @category.errors, status: :unprocessable_entity
+    end
   end
 
   private
