@@ -26,28 +26,22 @@ cd vue-on-rails
 nvm use v18.20.2
 ```
 
-4. Install Rails dependencies:
-
-```bash
-bundle install
-```
-
-5. Update Vue.js dependencies using Vite:
-
-```bash
-bundle exec vite upgrade
-```
-
-6. Create database, run migrations and seeds
+4. Create database, run migrations and seeds
 
 ```bash
 rails db:create db:migrate db:seed
 ```
 
-7. Now you're ready to start the Rails server and begin development:
+5. Apply bundle install and npm install:
 
 ```bash
-rails server
+bundle exec vite upgrade
+```
+
+6. Now you're ready to start the Rails server and begin development:
+
+```bash
+rails s
 ```
 
 This will start the Rails server on the default port (`http://localhost:3000`). You can access this URL in your browser to view the application.

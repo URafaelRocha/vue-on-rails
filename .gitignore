@@ -32,3 +32,6 @@ node_modules
 *.local
 node_modules
 
+# local .env files
+.env.local*
+*.env
