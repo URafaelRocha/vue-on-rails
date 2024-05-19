@@ -29,21 +29,21 @@ export default defineComponent({
   setup(props) {
     const title = computed(() => {
       return {
-        200: "200",
-        403: "403",
-        404: "404",
-        500: "500",
-        503: "503",
+        200: '200',
+        403: '403',
+        404: '404',
+        500: '500',
+        503: '503',
       }[props.status];
     });
 
     const description = computed(() => {
       return {
-        200: "Successfully Request",
-        403: "Unauthorized",
-        404: "Not found",
-        500: "Serever Error",
-        503: "Maintenance",
+        200: 'Successfully Request',
+        403: 'Unauthorized',
+        404: 'Not found',
+        500: 'Serever Error',
+        503: 'Maintenance',
       }[props.status];
     });
 
@@ -51,7 +51,7 @@ export default defineComponent({
       title,
       description,
       URI
-    }
+    };
   }
 });
 </script>

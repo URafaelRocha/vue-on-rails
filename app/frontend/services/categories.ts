@@ -8,14 +8,14 @@ import { i18nInstance } from '../i18n';
 
 export default class Categories {
   public data: {
-    categories: ICategory[],
-    dialog: boolean,
-    errorMessage: string,
+    categories: ICategory[];
+    dialog: boolean;
+    errorMessage: string;
     payload: {
-      name: string,
-      color: string
-    }
-    currentCategoryId: null | number
+      name: string;
+      color: string;
+    };
+    currentCategoryId: null | number;
   } = reactive({
     categories: [],
     dialog: false,
@@ -24,19 +24,19 @@ export default class Categories {
       color: '',
     },
     errorMessage: '',
-    currentCategoryId: null
+    currentCategoryId: null,
   });
 
   public toggleDialog = () => {
     this.data.dialog = !this.data.dialog;
-  }
+  };
 
   public reset = () => {
     this.toggleDialog();
     this.data.payload = { name: '', color: '' };
     this.data.errorMessage = '';
     this.data.currentCategoryId = null;
-  }
+  };
 
   public create = async () => {
     try {
@@ -55,7 +55,7 @@ export default class Categories {
     } catch (error) {
       console.error('Error creating category:', error);
     }
-  }
+  };
 
   public edit = async (categoryId: number) => {
     try {
@@ -74,7 +74,7 @@ export default class Categories {
     } catch (error) {
       console.error('Error updating category:', error);
     }
-  }
+  };
 
   public destroy = async (categoryId: number) => {
     try {
@@ -83,7 +83,7 @@ export default class Categories {
     } catch (error) {
       console.error('Error deleting category:', error);
     }
-  }
+  };
 
   public getCategories = async () => {
     try {
@@ -95,12 +95,9 @@ export default class Categories {
     } catch (error) {
       console.error('Error for getting categories:', error);
     }
-  }
+  };
 
-  private validatePayload = (payload: {
-    name: string;
-    color: string;
-  }) => {
+  private validatePayload = (payload: { name: string; color: string }) => {
     const trimmedName = payload.name ? payload.name.trim() : '';
     const trimmedColor = payload.color ? payload.color.trim() : '';
 
@@ -121,7 +118,7 @@ export default class Categories {
     }
 
     return '';
-  }
+  };
 }
 
 export const categoriesService = new Categories();

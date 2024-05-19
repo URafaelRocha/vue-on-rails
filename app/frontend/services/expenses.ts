@@ -1,6 +1,5 @@
 import { reactive } from 'vue';
 import { api } from '../boot/axios';
-import { isValidHexColor } from '../utils/validations';
 import { URI } from '../enums/routes';
 import { IExpenses } from '../interfaces';
 import { i18nInstance } from '../i18n';
@@ -28,7 +27,7 @@ export default class Expenses {
 
   public toggleDialog = () => {
     this.data.dialog = !this.data.dialog;
-  }
+  };
 
   public reset = () => {
     this.toggleDialog();
@@ -38,7 +37,7 @@ export default class Expenses {
       category_id: null
     };
     this.data.errorMessage = '';
-  }
+  };
 
   public create = async () => {
     try {
@@ -57,7 +56,7 @@ export default class Expenses {
     } catch (error) {
       console.error('Error creating expense:', error);
     }
-  }
+  };
 
   public edit = async (expenseId: number) => {
     try {
@@ -76,7 +75,7 @@ export default class Expenses {
     } catch (error) {
       console.error('Error updating expense:', error);
     }
-  }
+  };
 
   public destroy = async (expenseId: number) => {
     try {
@@ -123,7 +122,7 @@ export default class Expenses {
     }
 
     return '';
-  }
+  };
 }
 
 export const expensesService = new Expenses();

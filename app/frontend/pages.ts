@@ -1,12 +1,12 @@
 // NOTE: Optimize the SSR bundle by not splitting by page.
-import Layout from "./layouts/main.vue";
+import Layout from './layouts/main.vue';
 
 // @ts-ignore
 const pages = import.meta.env.SSR
   // @ts-ignore
-  ? import.meta.globEagerDefault("./pages/**/*.vue", { eager: true })
+  ? import.meta.globEagerDefault('./pages/**/*.vue', { eager: true })
   // @ts-ignore
-  : import.meta.glob("./pages/**/*.vue", { eager: true });
+  : import.meta.glob('./pages/**/*.vue', { eager: true });
 
 export async function resolvePage(name: string) {
   const page = pages[`./pages/${name}.vue`];

@@ -81,7 +81,7 @@ export default defineComponent({
     const darkTheme = computed(() => theme.global.name.value === 'dark');
 
     const data: {
-      resources: IResource[];
+      resources: IResource[]
     } = reactive({
       resources: [
         {

@@ -1,8 +1,8 @@
-import { createApp, h } from "vue";
-import { createInertiaApp, Head, Link } from "@inertiajs/vue3";
-import { vuetifyPlugin } from "./vuetify";
-import { resolvePage } from "./pages";
-import { i18nInstance } from "./i18n";
+import { createApp, h } from 'vue';
+import { createInertiaApp, Head, Link } from '@inertiajs/vue3';
+import { vuetifyPlugin } from './vuetify';
+import { resolvePage } from './pages';
+import { i18nInstance } from './i18n';
 
 export default function () {
   createInertiaApp({
@@ -23,8 +23,8 @@ export default function () {
       app.use(vuetifyPlugin);
       app.use(i18nInstance);
 
-      app.component("iHead", Head);
-      app.component("iLink", Link);
+      app.component('iHead', Head);
+      app.component('iLink', Link);
 
       app.mount(el);
     },
