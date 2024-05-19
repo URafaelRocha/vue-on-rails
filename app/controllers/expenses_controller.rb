@@ -14,7 +14,9 @@ class ExpensesController < ApplicationController
 
   # GET /expenses api
   def all
-    @expenses = Expense.all
+    @expenses = Expense.includes(:category).all.map do |expense|
+      expense.attributes.merge(category: expense.category.attributes)
+    end
 
     if @expenses.present?
       render json: @expenses, status: :ok

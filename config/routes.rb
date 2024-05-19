@@ -9,7 +9,11 @@ Rails.application.routes.draw do
   root to: redirect('/categories')
 
   defaults export: true do
-    resources :expenses
+    resources :expenses do
+      collection do
+        get '/api', to: 'expenses#all'
+      end
+    end
 
     resources :categories do
       collection do

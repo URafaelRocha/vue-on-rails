@@ -1,22 +1,19 @@
 <template>
-  <div
-    class="d-flex ga-3 flex-column w-100"
-  >
+  <div class="d-flex ga-3 flex-column w-100">
     <div class="d-flex align-center justify-space-between w-100">
-      <span class="text-h4 font-weight-medium ml-4">{{ $t('category.name') }}</span>
+      <span class="text-h4 font-weight-medium ml-4">{{
+        $t('category.title')
+      }}</span>
 
       <v-btn
+        v-tooltip="$t('category.new')"
         icon="mdi-plus"
         class="mr-7"
-        v-tooltip="'New Category'"
         @click="open"
       />
     </div>
 
-    <div
-      v-if="categoriesService.data.categories.length"
-      class="w-100"
-    >
+    <div v-if="categoriesService.data.categories.length" class="w-100">
       <div
         v-for="category in categoriesService.data.categories"
         :key="category.id"
@@ -24,17 +21,20 @@
       >
         <v-card :title="category.name" :color="category.color" class="w-100">
           <template v-slot:subtitle>
-            ${{ formatAmount(category.expenses) }}
+            {{ $t('currency_type') }}
+            {{ formatAmount(category.expenses) }}
           </template>
 
           <template v-slot:append>
             <v-btn
+              v-tooltip="$t('category.edit')"
               icon="mdi-square-edit-outline"
               size="small"
               class="mr-2"
               @click="open(category)"
             ></v-btn>
             <v-btn
+              v-tooltip="$t('category.destroy')"
               icon="mdi-trash-can-outline"
               size="small"
               @click="categoriesService.destroy(category.id)"
@@ -44,13 +44,11 @@
       </div>
     </div>
 
-    <div v-else class="text-center pt-2 w-100">
-      No category found
-    </div>
+    <div v-else class="text-center pt-2 w-100">{{ $t('category.no_category') }}</div>
 
     <CategoryDialog
       :show="categoriesService.data.dialog"
-      title="New Category"
+      :title="$t('category.new')"
       @cancel="categoriesService.reset"
       @confirm="confirm"
     >
@@ -67,15 +65,15 @@
 
           <v-text-field
             v-model="categoriesService.data.payload.name"
-            label="Name"
+            :label="$t('category.name')"
             required
           ></v-text-field>
 
           <v-text-field
             v-model="categoriesService.data.payload.color"
-            hint="example of color: deep orange or #FF8C00"
-            placeholder="Color name or Hex code"
-            label="Color"
+            :hint="$t('category.hint')"
+            :placeholder="$t('category.placeholder')"
+            :label="$t('category.color')"
             required
           ></v-text-field>
         </v-card-text>
@@ -109,7 +107,7 @@ export default defineComponent({
 
     function open(category?: ICategory) {
       // edit
-      if(category) {
+      if (category) {
         categoriesService.data.payload.name = category.name;
         categoriesService.data.payload.color = category.color;
 
@@ -117,11 +115,11 @@ export default defineComponent({
         categoriesService.data.currentCategoryId = category.id;
       }
 
-      categoriesService.data.dialog = true;
+      categoriesService.toggleDialog();
     }
 
     async function confirm() {
-      if(categoriesService.data.currentCategoryId) {
+      if (categoriesService.data.currentCategoryId) {
         await categoriesService.edit(categoriesService.data.currentCategoryId);
       } else {
         await categoriesService.create();
@@ -129,7 +127,7 @@ export default defineComponent({
     }
 
     onBeforeMount(() => {
-      // set initial categories
+      // set current categories
       categoriesService.data.categories = props.categories;
     });
 
@@ -139,7 +137,7 @@ export default defineComponent({
       // methods
       open,
       confirm,
-      formatAmount
+      formatAmount,
     };
   },
 });

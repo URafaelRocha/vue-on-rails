@@ -4,6 +4,8 @@ import { isValidHexColor } from '../utils/validations';
 import { URI } from '../enums/routes';
 import { ICategory } from '../interfaces';
 
+import { i18nInstance } from '../i18n';
+
 export default class Categories {
   public data: {
     categories: ICategory[],
@@ -13,21 +15,27 @@ export default class Categories {
       name: string,
       color: string
     }
-    currentCategoryId: number
+    currentCategoryId: null | number
   } = reactive({
     categories: [],
     dialog: false,
-    errorMessage: '',
     payload: {
       name: '',
       color: '',
     },
-    currentCategoryId: 0
+    errorMessage: '',
+    currentCategoryId: null
   });
 
-  public reset =  () => {
-    this.data.dialog = false;
+  public toggleDialog = () => {
+    this.data.dialog = !this.data.dialog;
+  }
+
+  public reset = () => {
+    this.toggleDialog();
     this.data.payload = { name: '', color: '' };
+    this.data.errorMessage = '';
+    this.data.currentCategoryId = null;
   }
 
   public create = async () => {
@@ -93,23 +101,23 @@ export default class Categories {
     name: string;
     color: string;
   }) => {
-    const trimmedName = payload.name.trim();
-    const trimmedColor = payload.color.trim();
+    const trimmedName = payload.name ? payload.name.trim() : '';
+    const trimmedColor = payload.color ? payload.color.trim() : '';
 
     if (!trimmedName && !trimmedColor) {
-      return 'Please fill in the name and color.';
+      return i18nInstance.global.t('category.errors.noNameAndColor');
     }
 
     if (!trimmedName) {
-      return 'Please fill in the name.';
+      return i18nInstance.global.t('category.errors.noName');
     }
 
     if (!trimmedColor) {
-      return 'Please fill in the color.';
+      return i18nInstance.global.t('category.errors.noColor');
     }
 
     if (trimmedColor.includes('#') && !isValidHexColor(trimmedColor)) {
-      return 'Please enter a valid hexadecimal color.';
+      return i18nInstance.global.t('category.errors.invalidHex');
     }
 
     return '';

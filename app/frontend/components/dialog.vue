@@ -12,8 +12,8 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" text="Cancel" variant="plain" @click="close" />
-        <v-btn color="primary" text="Save" variant="tonal" @click="save" />
+        <v-btn color="primary" :text="cancelText" variant="plain" @click="close" />
+        <v-btn color="primary" :text="okText" variant="tonal" @click="save" />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -21,6 +21,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'Dialog',
@@ -28,14 +29,26 @@ export default defineComponent({
     show: {
       type: Boolean,
       required: true,
+      default: ''
     },
     title: {
       type: String,
       required: false,
+      default: ''
     },
+    cancelLabel: {
+      type: String,
+      required: false
+    },
+    okLabel: {
+      type: String,
+      required: false
+    }
   },
   emits: ['cancel', 'confirm'],
-  setup(_props, { emit }) {
+  setup(props, { emit }) {
+    const { t } = useI18n();
+
     function close() {
       emit('cancel');
     }
@@ -45,9 +58,12 @@ export default defineComponent({
     }
 
     return {
+      cancelText: t('dialog.cancel') || props.cancelLabel,
+      okText: t('dialog.ok') || props.okLabel,
+
       // methods
       close,
-      save,
+      save
     };
   },
 });

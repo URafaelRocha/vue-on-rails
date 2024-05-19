@@ -28,10 +28,11 @@
     <v-app-bar color="primary">
       <v-app-bar-nav-icon @click="changeDrawerView"></v-app-bar-nav-icon>
 
-      <v-app-bar-title>Wallet Manager</v-app-bar-title>
+      <v-app-bar-title>{{ $t('product_name') }}</v-app-bar-title>
 
       <v-btn
-        :icon="theme.global.name.value === 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+        v-tooltip:start="darkTheme ? $t('light_mode') : $t('dark_mode')"
+        :icon="darkTheme ? 'mdi-weather-sunny' : 'mdi-weather-night'"
         density="compact"
         size="large"
         @click="toggleTheme"
@@ -47,11 +48,21 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, onMounted, defineComponent, onBeforeMount, provide } from 'vue';
+import {
+  ref,
+  reactive,
+  onMounted,
+  defineComponent,
+  onBeforeMount,
+  provide,
+  computed,
+} from 'vue';
 
-import { useTheme } from "vuetify";
+import { useTheme } from 'vuetify';
+import { useI18n } from 'vue-i18n';
 
 import { categoriesService } from '../services/categories';
+import { expensesService } from '../services/expenses';
 
 import { URI } from '../enums/routes';
 import { IResource } from '../interfaces';
@@ -60,26 +71,31 @@ export default defineComponent({
   name: 'Main',
   setup() {
     const categories = categoriesService;
+    const expenses = expensesService;
 
     const drawer = ref(true);
     const theme = useTheme();
+
+    const { t } = useI18n();
+
+    const darkTheme = computed(() => theme.global.name.value === 'dark');
 
     const data: {
       resources: IResource[];
     } = reactive({
       resources: [
         {
-          name: 'Categories',
+          name: t('category.title'),
           uri: URI.CATEGORIES,
           icon: 'mdi-rhombus-split',
           isSelected: false,
         },
         {
-          name: 'Expenses',
+          name: t('expense.title'),
           uri: URI.EXPENSES,
           icon: 'mdi-finance',
           isSelected: false,
-        }
+        },
       ],
     });
 
@@ -102,12 +118,11 @@ export default defineComponent({
     }
 
     function toggleTheme() {
-      theme.global.name.value =
-        theme.global.name.value === 'dark' ? 'light' : "dark";
+      theme.global.name.value = darkTheme.value ? 'light' : 'dark';
     }
 
     function changeDrawerView() {
-      drawer.value = !drawer.value
+      drawer.value = !drawer.value;
     }
 
     onMounted(() => {
@@ -123,17 +138,18 @@ export default defineComponent({
 
     onBeforeMount(() => {
       provide('categories', categories);
+      provide('expenses', expenses);
     });
 
     return {
       drawer,
       data,
-      theme,
+      darkTheme,
 
       // methods
       selectRoute,
       toggleTheme,
-      changeDrawerView
+      changeDrawerView,
     };
   },
 });
