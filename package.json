@@ -1,6 +1,6 @@
 {
   "name": "vueonrailscrud",
-  "version": "1.1.11",
+  "version": "1.1.12",
   "productName": "vue on rails - crud",
   "description": "An crud in rails with vue3",
   "author": "rafael rocha <rafael.rocha@umode.com.br>",
