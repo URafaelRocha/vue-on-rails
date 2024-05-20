@@ -18,11 +18,7 @@ class ExpensesController < ApplicationController
       expense.attributes.merge(category: expense.category.attributes)
     end
 
-    if @expenses.present?
-      render json: @expenses, status: :ok
-    else
-      render json: { error: "No Expenses found" }, status: :not_found
-    end
+    render json: @expenses, status: :ok
   end
 
   # POST /expenses

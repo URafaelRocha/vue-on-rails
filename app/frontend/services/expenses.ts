@@ -1,5 +1,5 @@
 import { reactive } from 'vue';
-import { api } from '../boot/axios';
+import { api } from '../axios';
 import { URI } from '../enums/routes';
 import { IExpenses } from '../interfaces';
 import { i18nInstance } from '../i18n';

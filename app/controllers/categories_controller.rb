@@ -16,11 +16,7 @@ class CategoriesController < ApplicationController
       category.attributes.merge(expenses: category.expenses.as_json)
     end
 
-    if @categories.present?
-      render json: @categories, status: :ok
-    else
-      render json: { error: "No categories found" }, status: :not_found
-    end
+    render json: @categories, status: :ok
   end
 
   # POST /categories

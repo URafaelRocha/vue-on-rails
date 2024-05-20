@@ -1,5 +1,5 @@
 import { reactive } from 'vue';
-import { api } from '../boot/axios';
+import { api } from '../axios';
 import { isValidHexColor } from '../utils/validations';
 import { URI } from '../enums/routes';
 import { ICategory } from '../interfaces';

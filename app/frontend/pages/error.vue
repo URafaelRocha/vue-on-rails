@@ -2,11 +2,7 @@
   <v-row align="center" justify="center" class="h-screen">
     <v-col sm="12" md="4">
       <div class="text-h1 mx-auto text-center">{{ title }}</div>
-      <div class="text-h1 mx-auto text-center">{{ status }}</div>
       <div class="text-center py-8">{{ description }}</div>
-      <div class="text-center">
-        Ops, parece que ocorreu um erro
-      </div>
     </v-col>
   </v-row>
 </template>
@@ -29,7 +25,6 @@ export default defineComponent({
   setup(props) {
     const title = computed(() => {
       return {
-        200: '200',
         403: '403',
         404: '404',
         500: '500',
@@ -39,7 +34,6 @@ export default defineComponent({
 
     const description = computed(() => {
       return {
-        200: 'Successfully Request',
         403: 'Unauthorized',
         404: 'Not found',
         500: 'Serever Error',
