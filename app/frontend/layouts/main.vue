@@ -32,6 +32,7 @@
 
       <SwitchLanguage
         :language="currentLanguage"
+        :isMobile="isMobile"
         class="mr-2"
         @confirm="changeLanguage"
       />
@@ -62,6 +63,7 @@ import {
   onBeforeMount,
   provide,
   computed,
+  ComputedRef
 } from 'vue';
 
 import { useTheme } from 'vuetify';
@@ -93,12 +95,12 @@ export default defineComponent({
 
     const { t, locale } = useI18n();
 
+    const isMobile = computed(() => window.innerWidth <= 768);
     const currentLanguage = computed(() => locale.value);
     const currentTheme = computed(() => theme.global.name.value);
     const darkTheme = computed(() => theme.global.name.value === 'dark');
 
-    const userPreferences = computed(() => storage.getItem('user_preferences'))
-      .value as IUserPreferences;
+    const userPreferences: ComputedRef<IUserPreferences> = computed(() => storage.getItem('user_preferences'));
 
     const data: {
       resources: IResource[];
@@ -134,8 +136,7 @@ export default defineComponent({
         });
       }
 
-      // isMobile
-      if (window.innerWidth <= 768) {
+      if (isMobile.value) {
         changeDrawerView();
       }
     }
@@ -149,8 +150,8 @@ export default defineComponent({
       theme.global.name.value = value;
 
       const updatedPreferences = {
-        ...userPreferences,
         theme: value,
+        language: currentLanguage.value
       };
 
       storage.setItem('user_preferences', updatedPreferences);
@@ -159,8 +160,16 @@ export default defineComponent({
     function changeLanguage(language: string) {
       locale.value = language;
 
+      data.resources.forEach(resource => {
+        if (resource.uri === URI.CATEGORIES) {
+          resource.name = t('category.title');
+        } else if (resource.uri === URI.EXPENSES) {
+          resource.name = t('expense.title');
+        }
+      });
+
       const updatedPreferences = {
-        ...userPreferences,
+        theme: currentTheme.value,
         language,
       };
 
@@ -173,7 +182,7 @@ export default defineComponent({
 
     function loadPreferences() {
       // loading default preferences
-      if (!userPreferences) {
+      if (!userPreferences.value) {
         const defaultPreferences = {
           theme: currentTheme.value,
           language: currentLanguage.value,
@@ -181,12 +190,12 @@ export default defineComponent({
 
         storage.setItem('user_preferences', defaultPreferences);
       } else {
-        if (userPreferences.theme) setTheme(userPreferences.theme);
-        if (userPreferences.language) changeLanguage(userPreferences.language);
+        if (userPreferences.value.theme) setTheme(userPreferences.value.theme);
+        if (userPreferences.value.language) changeLanguage(userPreferences.value.language);
       }
 
-      logger.info(`Current theme => ${userPreferences.theme}`);
-      logger.info(`Current language => ${userPreferences.language}`);
+      logger.info(`Current theme => ${userPreferences.value.theme}`);
+      logger.info(`Current language => ${userPreferences.value.language}`);
     }
 
     onBeforeMount(() => {
@@ -212,6 +221,7 @@ export default defineComponent({
       data,
       darkTheme,
       currentLanguage,
+      isMobile,
 
       // methods
       selectRoute,
