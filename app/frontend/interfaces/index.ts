@@ -18,3 +18,12 @@ export interface IExpenses {
   category_id: number;
   category: ICategory
 }
+
+export interface IUserPreferences {
+  theme: string;
+  language: string
+}
+
+export interface IStorage {
+  user_preferences: IUserPreferences
+}

@@ -5,9 +5,13 @@ export function isValidHexColor(color: string): boolean {
   return regex.test(color);
 }
 
-export function formatAmount(expenses: IExpenses[]) {
-  return expenses
+export function formatAmount(expenses: IExpenses[]): string {
+  const totalAmount = expenses
     .map(({ amount }) => amount)
-    .reduce((acc: number, value: number) => acc + value, 0)
-    .toLocaleString() || 0;
+    .reduce((acc: number, value: number) => acc + value, 0);
+
+  return totalAmount.toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) || '0,00';
 }

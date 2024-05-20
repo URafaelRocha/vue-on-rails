@@ -7,7 +7,7 @@
           :key="resource.name"
           :href="resource.uri"
           role="navigation"
-          class="inertia-link text-default"
+          class="text-decoration-none text-default"
         >
           <v-list-item
             :value="resource.name"
@@ -114,7 +114,9 @@ export default defineComponent({
         });
       }
 
-      // changeDrawerView();
+      if (window.innerWidth <= 768) {
+        changeDrawerView();
+      }
     }
 
     function toggleTheme() {
