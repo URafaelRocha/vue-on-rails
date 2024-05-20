@@ -65,20 +65,26 @@ import { categoriesService } from '../services/categories';
 import { expensesService } from '../services/expenses';
 
 import { URI } from '../enums/routes';
-import { IResource } from '../interfaces';
+import { IResource, IUserPreferences } from '../interfaces';
+import { storageService } from '../services/storage';
 
 export default defineComponent({
   name: 'Main',
   setup() {
     const categories = categoriesService;
     const expenses = expensesService;
+    const storage = storageService;
 
     const drawer = ref(true);
     const theme = useTheme();
 
-    const { t } = useI18n();
+    const { t, locale } = useI18n();
 
+    const currentLanguage = computed(() => locale.value).value as string;
+    const currentTheme = computed(() => theme.global.name.value).value;
     const darkTheme = computed(() => theme.global.name.value === 'dark');
+
+    const userPreferences = computed(() => storage.getItem('user_preferences')).value as IUserPreferences;
 
     const data: {
       resources: IResource[]
@@ -114,18 +120,48 @@ export default defineComponent({
         });
       }
 
+      // isMobile
       if (window.innerWidth <= 768) {
         changeDrawerView();
       }
     }
 
     function toggleTheme() {
-      theme.global.name.value = darkTheme.value ? 'light' : 'dark';
+      const value = darkTheme.value ? 'light' : 'dark';
+      setTheme(value);
+    }
+
+    function setTheme(value: string) {
+      theme.global.name.value = value;
+
+      const updatedPreferences = {
+        ...userPreferences,
+        theme: value
+      };
+      
+      storage.setItem('user_preferences', updatedPreferences);
     }
 
     function changeDrawerView() {
       drawer.value = !drawer.value;
     }
+
+    onBeforeMount(() => {
+      // loading default preferences
+      if(!userPreferences) {
+        const defaultPreferences = {
+          theme: currentTheme,
+          language: currentLanguage
+        };
+
+        storage.setItem('user_preferences', defaultPreferences);
+      } else {
+        if(userPreferences.theme) setTheme(userPreferences.theme);
+      }
+
+      provide('categories', categories);
+      provide('expenses', expenses);
+    });
 
     onMounted(() => {
       const uris = [URI.EXPENSES, URI.CATEGORIES];
@@ -136,11 +172,6 @@ export default defineComponent({
 
         if (resource) selectRoute(resource);
       }
-    });
-
-    onBeforeMount(() => {
-      provide('categories', categories);
-      provide('expenses', expenses);
     });
 
     return {
