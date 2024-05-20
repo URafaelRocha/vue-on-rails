@@ -5,7 +5,8 @@
     variant="underlined"
     item-title="label"
     item-value="value"
-    @change="changeLanguage"
+    max-width="150px"
+    @update:modelValue="changeLanguage"
   />
 </template>
 
@@ -15,14 +16,14 @@ import { defineComponent, ref } from 'vue';
 export default defineComponent({
   name: 'SwitchLanguage',
   props: {
-    value: {
+    language: {
       type: String,
       required: true
     },
   },
   emits: ['confirm'],
   setup(props, { emit }) {
-    const selectedLanguage = ref(props.value);
+    const selectedLanguage = ref(props.language);
     const options = [
       {
         label: 'Português - BR',

@@ -30,6 +30,12 @@
 
       <v-app-bar-title>{{ $t('product_name') }}</v-app-bar-title>
 
+      <SwitchLanguage
+        :language="currentLanguage"
+        class="mr-2"
+        @confirm="changeLanguage"
+      />
+
       <v-btn
         v-tooltip:start="darkTheme ? $t('light_mode') : $t('dark_mode')"
         :icon="darkTheme ? 'mdi-weather-sunny' : 'mdi-weather-night'"
@@ -61,33 +67,41 @@ import {
 import { useTheme } from 'vuetify';
 import { useI18n } from 'vue-i18n';
 
+import SwitchLanguage from '../components/switch-language.vue';
+
 import { categoriesService } from '../services/categories';
 import { expensesService } from '../services/expenses';
 
 import { URI } from '../enums/routes';
 import { IResource, IUserPreferences } from '../interfaces';
 import { storageService } from '../services/storage';
+import { loggerService } from '../services/logger';
 
 export default defineComponent({
   name: 'Main',
+  components: {
+    SwitchLanguage,
+  },
   setup() {
     const categories = categoriesService;
     const expenses = expensesService;
     const storage = storageService;
+    const logger = loggerService;
 
     const drawer = ref(true);
     const theme = useTheme();
 
     const { t, locale } = useI18n();
 
-    const currentLanguage = computed(() => locale.value).value as string;
-    const currentTheme = computed(() => theme.global.name.value).value;
+    const currentLanguage = computed(() => locale.value);
+    const currentTheme = computed(() => theme.global.name.value);
     const darkTheme = computed(() => theme.global.name.value === 'dark');
 
-    const userPreferences = computed(() => storage.getItem('user_preferences')).value as IUserPreferences;
+    const userPreferences = computed(() => storage.getItem('user_preferences'))
+      .value as IUserPreferences;
 
     const data: {
-      resources: IResource[]
+      resources: IResource[];
     } = reactive({
       resources: [
         {
@@ -136,9 +150,20 @@ export default defineComponent({
 
       const updatedPreferences = {
         ...userPreferences,
-        theme: value
+        theme: value,
       };
-      
+
+      storage.setItem('user_preferences', updatedPreferences);
+    }
+
+    function changeLanguage(language: string) {
+      locale.value = language;
+
+      const updatedPreferences = {
+        ...userPreferences,
+        language,
+      };
+
       storage.setItem('user_preferences', updatedPreferences);
     }
 
@@ -146,18 +171,26 @@ export default defineComponent({
       drawer.value = !drawer.value;
     }
 
-    onBeforeMount(() => {
+    function loadPreferences() {
       // loading default preferences
-      if(!userPreferences) {
+      if (!userPreferences) {
         const defaultPreferences = {
-          theme: currentTheme,
-          language: currentLanguage
+          theme: currentTheme.value,
+          language: currentLanguage.value,
         };
 
         storage.setItem('user_preferences', defaultPreferences);
       } else {
-        if(userPreferences.theme) setTheme(userPreferences.theme);
+        if (userPreferences.theme) setTheme(userPreferences.theme);
+        if (userPreferences.language) changeLanguage(userPreferences.language);
       }
+
+      logger.info(`Current theme => ${userPreferences.theme}`);
+      logger.info(`Current language => ${userPreferences.language}`);
+    }
+
+    onBeforeMount(() => {
+      loadPreferences();
 
       provide('categories', categories);
       provide('expenses', expenses);
@@ -178,11 +211,13 @@ export default defineComponent({
       drawer,
       data,
       darkTheme,
+      currentLanguage,
 
       // methods
       selectRoute,
       toggleTheme,
       changeDrawerView,
+      changeLanguage,
     };
   },
 });

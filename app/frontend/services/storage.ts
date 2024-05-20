@@ -1,6 +1,6 @@
 type storageKey = 'user_preferences'
 
-class Storage {
+export default class Storage {
   setItem(key: storageKey, content: any) {
     localStorage.setItem(key, JSON.stringify(content));
   }
